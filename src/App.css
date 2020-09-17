@@ -1,38 +1,56 @@
-.App {
-  text-align: center;
+:root {
+  --facebook-blue: #1878f3;
+  --facebook-dark: #166fe5;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+html {
+  font-size: 62.5%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+body {
+  font-size: 1.6rem;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f1f2f6;
 }
 
-.App-link {
-  color: #61dafb;
+input:focus,
+input:active {
+  outline: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button:focus,
+button:active {
+  outline: none;
+}
+
+/*   UTILS   */
+
+.divider {
+  display: block;
+  content: '';
+  height: 1px;
+  width: 100%;
+  border-bottom: 1px solid #dddfe2;
+  margin-bottom: 2rem;
+}
+
+.my-node-enter {
+  opacity: 0;
+}
+.my-node-enter-active {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+.my-node-exit {
+  opacity: 1;
+}
+.my-node-exit-active {
+  opacity: 0;
+  transition: opacity 400ms;
 }

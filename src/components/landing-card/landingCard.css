@@ -1,0 +1,57 @@
+.card {
+  position: relative;
+  max-width: 16rem;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #f5f6f8;
+  box-shadow: 0 0 0 1px #dddfe2;
+  transition: all 0.25s ease-out;
+}
+
+.card:not(:last-child) {
+  margin-right: 2rem;
+}
+
+.card:hover {
+  box-shadow: 0 1px 8px 5px #dddfe2;
+}
+
+.card__img--delete {
+  z-index: 10;
+  margin: 1rem 0 0 1rem;
+  position: absolute;
+  color: #fff;
+  opacity: 0.7;
+  font-size: 1.6rem;
+  transition: all 0.25s ease-out;
+}
+
+.card:hover .card__img--delete {
+  transform: scale(1.4);
+  opacity: 1;
+}
+
+.card__img {
+  width: 100%;
+  height: 16rem;
+  object-fit: cover;
+  display: block;
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--facebook-blue);
+}
+
+.card__name {
+  background-color: #fff;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.card__name h2 {
+  font-size: 1.8rem;
+  color: #4b4f56;
+  font-weight: 500;
+}
