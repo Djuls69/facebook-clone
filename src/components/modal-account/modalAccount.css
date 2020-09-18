@@ -1,0 +1,10 @@
+.modal-login__avatar {
+  width: 16rem;
+  height: 16rem;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.modal-login__name {
+  margin: 3rem auto;
+}

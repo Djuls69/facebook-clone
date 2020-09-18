@@ -7,11 +7,11 @@ import { connect } from 'react-redux'
 const validate = values => {
   const errors = {}
   if (!values.firstName) {
-    errors.firstName = 'Prénom requis'
+    errors.firstName = 'Prénom et Nom requis'
   }
 
   if (!values.lastName) {
-    errors.lastName = 'Nom requis'
+    errors.firstName = 'Prénom et Nom requis'
   }
 
   if (!values.email) {
@@ -29,7 +29,7 @@ const validate = values => {
   return errors
 }
 
-const RegisterForm = ({ setModal, registerUser }) => {
+const RegisterForm = ({ setModal, registerUser, users: { error } }) => {
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -40,10 +40,9 @@ const RegisterForm = ({ setModal, registerUser }) => {
     validate,
     onSubmit: values => {
       registerUser(values.firstName, values.lastName, values.email, values.password)
-      setModal(false)
     }
   })
-  const { values, handleChange, handleSubmit } = formik
+  const { values, handleChange, handleSubmit, handleBlur, errors, touched } = formik
 
   return (
     <div className='register-form'>
@@ -63,6 +62,7 @@ const RegisterForm = ({ setModal, registerUser }) => {
             name='firstName'
             value={values.firstName}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder='Prénom'
           />
           <input
@@ -71,25 +71,32 @@ const RegisterForm = ({ setModal, registerUser }) => {
             name='lastName'
             value={values.lastName}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder='Nom de famille'
           />
         </div>
+        {touched.firstName && errors.firstName && <p className='form-error'>{errors.firstName}</p>}
         <input
           className='register-form__input'
           type='email'
           name='email'
           value={values.email}
           onChange={handleChange}
-          placeholder='Adresse e-mail ou numéro de tél.'
+          onBlur={handleBlur}
+          placeholder='Adresse e-mail'
         />
+        {touched.email && errors.email && <p className='form-error'>{errors.email}</p>}
         <input
           className='register-form__input'
           type='password'
           name='password'
           value={values.password}
           onChange={handleChange}
+          onBlur={handleBlur}
           placeholder='Nouveau mot de passe'
         />
+        {touched.password && errors.password && <p className='form-error'>{errors.password}</p>}
+        {error && <p className='form-error'>Adresse e-mail déjà utilisée</p>}
         <p className='register-form__small'>
           En cliquant sur S’inscrire, vous acceptez nos Conditions générales. Découvrez comment nous recueillons,
           utilisons et partageons vos données en lisant notre Politique d’utilisation des données et comment nous
@@ -105,4 +112,6 @@ const RegisterForm = ({ setModal, registerUser }) => {
   )
 }
 
-export default connect(null, { registerUser })(RegisterForm)
+const mapState = ({ users }) => ({ users })
+
+export default connect(mapState, { registerUser })(RegisterForm)

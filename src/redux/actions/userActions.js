@@ -1,5 +1,5 @@
 import { auth, db } from '../../firebase/firebase'
-import { REGISTER_USER, LOGIN_USER, CLEAR_USER } from '../types'
+import { CLEAR_USER, LOAD_USER, ERROR_USER, CLEAR_ERROR } from '../types'
 import { addAccount } from './accountsActions'
 
 export const registerUser = (firstName, lastName, email, password) => async dispatch => {
@@ -14,26 +14,43 @@ export const registerUser = (firstName, lastName, email, password) => async disp
       date: Date.now()
     })
 
-    dispatch({
-      type: REGISTER_USER
-    })
+    dispatch(loadUser())
+    dispatch(clearError())
   } catch (err) {
-    console.log(err.message)
+    dispatch({
+      type: ERROR_USER,
+      payload: err.message
+    })
   }
 }
 
 export const loginUser = (email, password) => async dispatch => {
   try {
     await auth.signInWithEmailAndPassword(email, password)
+    dispatch(loadUser())
+    dispatch(clearError())
+  } catch (err) {
+    dispatch({
+      type: ERROR_USER,
+      payload: err.message
+    })
+  }
+}
+
+export const loadUser = () => async dispatch => {
+  try {
     const userId = auth.currentUser.uid
     const res = await db.doc(`users/${userId}`).get()
     dispatch({
-      type: LOGIN_USER,
+      type: LOAD_USER,
       payload: res.data()
     })
     dispatch(addAccount(res.data()))
   } catch (err) {
-    console.log(err.message)
+    dispatch({
+      type: ERROR_USER,
+      payload: err.message
+    })
   }
 }
 
@@ -44,7 +61,10 @@ export const signOut = () => async dispatch => {
       type: CLEAR_USER
     })
   } catch (err) {
-    console.log(err.message)
+    dispatch({
+      type: ERROR_USER,
+      payload: err.message
+    })
   }
 }
 
@@ -54,6 +74,15 @@ export const tokenExpires = () => dispatch => {
       type: CLEAR_USER
     })
   } catch (err) {
-    console.log(err.message)
+    dispatch({
+      type: ERROR_USER,
+      payload: err.message
+    })
   }
+}
+
+export const clearError = () => dispatch => {
+  dispatch({
+    type: CLEAR_ERROR
+  })
 }

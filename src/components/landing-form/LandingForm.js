@@ -22,7 +22,7 @@ const validate = values => {
   return errors
 }
 
-const LandingForm = ({ setModal, loginUser }) => {
+const LandingForm = ({ setModal, loginUser, users: { error } }) => {
   const formik = useFormik({
     initialValues: {
       email: 'admin@gmail.com',
@@ -53,9 +53,11 @@ const LandingForm = ({ setModal, loginUser }) => {
         onChange={handleChange}
         placeholder='Mot de passe'
       />
+
       <button className='landing-form__button blue-btn' type='submit'>
         Connexion
       </button>
+      {error && <p className='form-error'>Identifiants incorrects.</p>}
       <p className='landing-form__link'>Mot de passe oublié ?</p>
       <div className='divider' />
       <button type='button' onClick={() => setModal(true)} className='landing-form__button green-btn'>
@@ -65,4 +67,6 @@ const LandingForm = ({ setModal, loginUser }) => {
   )
 }
 
-export default connect(null, { loginUser })(LandingForm)
+const mapState = ({ users }) => ({ users })
+
+export default connect(mapState, { loginUser })(LandingForm)

@@ -6,9 +6,11 @@ import LandingForm from '../../components/landing-form/LandingForm'
 import RegisterForm from '../../components/register-form/RegisterForm'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
+import ModalLogin from '../../components/modal-login/ModalLogin'
 
 const Landing = ({ users: { user }, accounts }) => {
   const [modal, setModal] = useState(false)
+  const [modalLogin, setModalLogin] = useState(false)
 
   return (
     <section className='landing'>
@@ -24,13 +26,16 @@ const Landing = ({ users: { user }, accounts }) => {
               accounts
                 .filter((_, idx) => idx < 2)
                 .map(account => <LandingCard key={account.email} account={account} />)}
-            <div className='card'>
+            <div className='card' onClick={() => setModalLogin(true)}>
               <i className='fas fa-plus-circle card__img'></i>
               <div className='card__name'>
                 <h2 style={{ color: 'var(--facebook-blue)' }}>Ajouter un compte</h2>
               </div>
             </div>
           </div>
+          <CSSTransition in={modalLogin} timeout={300} classNames='my-node' mountOnEnter unmountOnExit>
+            <ModalLogin setModalLogin={setModalLogin} />
+          </CSSTransition>
         </div>
         <div className='landing__right'>
           <LandingForm setModal={setModal} />
@@ -40,7 +45,7 @@ const Landing = ({ users: { user }, accounts }) => {
           </p>
         </div>
       </div>
-      <CSSTransition in={modal} timeout={400} classNames='my-node' mountOnEnter unmountOnExit>
+      <CSSTransition in={modal} timeout={300} classNames='my-node' mountOnEnter unmountOnExit>
         <RegisterForm setModal={setModal} />
       </CSSTransition>
     </section>
