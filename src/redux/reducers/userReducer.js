@@ -1,8 +1,7 @@
-import { REGISTER_USER, LOGIN_USER, LOAD_USER } from '../types'
+import { REGISTER_USER, LOGIN_USER, CLEAR_USER } from '../types'
 
 const init_state = {
-  token: localStorage.getItem('facebook-token'),
-  user: null
+  user: JSON.parse(localStorage.getItem('facebook-user'))
 }
 
 const userReducer = (state = init_state, action) => {
@@ -10,16 +9,22 @@ const userReducer = (state = init_state, action) => {
 
   switch (type) {
     case REGISTER_USER:
-    case LOGIN_USER:
       localStorage.setItem('facebook-token', payload)
       return {
         ...state,
         token: payload
       }
-    case LOAD_USER:
+    case LOGIN_USER:
+      localStorage.setItem('facebook-user', JSON.stringify(payload))
       return {
         ...state,
         user: payload
+      }
+    case CLEAR_USER:
+      localStorage.removeItem('facebook-user')
+      return {
+        ...state,
+        user: null
       }
     default:
       return state

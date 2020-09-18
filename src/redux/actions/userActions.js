@@ -1,6 +1,5 @@
 import { auth, db } from '../../firebase/firebase'
-import jwt from 'jsonwebtoken'
-import { REGISTER_USER, LOGIN_USER, LOAD_USER } from '../types'
+import { REGISTER_USER, LOGIN_USER, CLEAR_USER } from '../types'
 
 export const registerUser = (firstName, lastName, email, password) => async dispatch => {
   try {
@@ -14,18 +13,9 @@ export const registerUser = (firstName, lastName, email, password) => async disp
       date: Date.now()
     })
 
-    const payload = {
-      user: {
-        id: res.user.uid
-      }
-    }
-
-    const token = jwt.sign(payload, process.env.REACT_APP_TOKENSECRET, { expiresIn: 60 * 60 * 24 })
     dispatch({
-      type: REGISTER_USER,
-      payload: token
+      type: REGISTER_USER
     })
-    dispatch(loadUser(token))
   } catch (err) {
     console.log(err.message)
   }
@@ -33,37 +23,34 @@ export const registerUser = (firstName, lastName, email, password) => async disp
 
 export const loginUser = (email, password) => async dispatch => {
   try {
-    const res = await auth.signInWithEmailAndPassword(email, password)
-
-    const payload = {
-      user: {
-        id: res.user.uid
-      }
-    }
-
-    const token = jwt.sign(payload, process.env.REACT_APP_TOKENSECRET, { expiresIn: 60 * 60 * 24 })
+    await auth.signInWithEmailAndPassword(email, password)
+    const userId = auth.currentUser.uid
+    const res = await db.doc(`users/${userId}`).get()
     dispatch({
       type: LOGIN_USER,
-      payload: token
+      payload: res.data()
     })
-    dispatch(loadUser(token))
   } catch (err) {
     console.log(err.message)
   }
 }
 
-export const loadUser = token => async dispatch => {
+export const signOut = () => async dispatch => {
   try {
-    const decoded = jwt.verify(token, process.env.REACT_APP_TOKENSECRET)
-    console.log(decoded.user.id)
-    const user = await db.doc(`users/${decoded.user.id}`).get()
-    if (user) {
-      console.log(user.data())
-      dispatch({
-        type: LOAD_USER,
-        payload: user.data()
-      })
-    }
+    await auth.signOut()
+    dispatch({
+      type: CLEAR_USER
+    })
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+
+export const tokenExpires = () => dispatch => {
+  try {
+    dispatch({
+      type: CLEAR_USER
+    })
   } catch (err) {
     console.log(err.message)
   }

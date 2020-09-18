@@ -1,0 +1,12 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  height: 60px;
+  padding: 1rem 2rem;
+  background-color: #242527;
+}
+
+.navbar__logo {
+  height: 40px;
+  width: 40px;
+}
