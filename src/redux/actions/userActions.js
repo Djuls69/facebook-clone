@@ -1,5 +1,6 @@
 import { auth, db } from '../../firebase/firebase'
 import { REGISTER_USER, LOGIN_USER, CLEAR_USER } from '../types'
+import { addAccount } from './accountsActions'
 
 export const registerUser = (firstName, lastName, email, password) => async dispatch => {
   try {
@@ -30,6 +31,7 @@ export const loginUser = (email, password) => async dispatch => {
       type: LOGIN_USER,
       payload: res.data()
     })
+    dispatch(addAccount(res.data()))
   } catch (err) {
     console.log(err.message)
   }

@@ -18,7 +18,7 @@ const userReducer = (state = init_state, action) => {
       localStorage.setItem('facebook-user', JSON.stringify(payload))
       return {
         ...state,
-        user: payload
+        user: JSON.parse(localStorage.getItem('facebook-user'))
       }
     case CLEAR_USER:
       localStorage.removeItem('facebook-user')

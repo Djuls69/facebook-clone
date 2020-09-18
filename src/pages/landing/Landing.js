@@ -7,7 +7,7 @@ import RegisterForm from '../../components/register-form/RegisterForm'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 
-const Landing = ({ users: { user } }) => {
+const Landing = ({ users: { user }, accounts }) => {
   const [modal, setModal] = useState(false)
 
   return (
@@ -20,7 +20,10 @@ const Landing = ({ users: { user } }) => {
             <p>Cliquez sur votre image ou sur Ajouter un compte.</p>
           </div>
           <div className='cards_container'>
-            {user !== null && <LandingCard name={user.firstName} avatar={user.avatar} />}
+            {accounts.length > 0 &&
+              accounts
+                .filter((_, idx) => idx < 2)
+                .map(account => <LandingCard key={account.email} account={account} />)}
             <div className='card'>
               <i className='fas fa-plus-circle card__img'></i>
               <div className='card__name'>
@@ -45,7 +48,8 @@ const Landing = ({ users: { user } }) => {
 }
 
 const mapState = state => ({
-  users: state.users
+  users: state.users,
+  accounts: state.accounts
 })
 
 export default connect(mapState)(Landing)
